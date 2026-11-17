@@ -109,6 +109,8 @@ form.q button{grid-column:1/-1;justify-content:center}
 @media(max-width:520px){form.q{grid-template-columns:1fr}}
 .steps li{margin:0 0 12px 22px}.steps{margin-top:12px}
 /* shops */
+.tyreline{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;background:var(--ink);color:#fff;border-radius:16px;padding:18px 22px;margin-bottom:16px}
+.tyreline h3{font-size:26px}.tyreline p{color:#c9ccd2;margin-top:2px}
 .shops{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media(max-width:720px){.shops{grid-template-columns:1fr}}
 .shop{background:#fff;border-radius:16px;border:1px solid #e3e1dc;padding:22px}
@@ -232,7 +234,7 @@ footer a{color:#fff}
 
 <section class="blk dark" id="devis"><div class="wrap quote">
   <div><div class="head"><h2><span lang="fr">Devis par WhatsApp</span><span lang="en">Quote on WhatsApp</span></h2></div>
-    <p style="color:#b9bcc3"><span lang="fr">Remplissez le formulaire : il ouvre WhatsApp avec votre message prêt à envoyer au magasin choisi. Rien n'est enregistré sur ce site.</span><span lang="en">Fill in the form: it opens WhatsApp with your message ready to send to the shop you choose. Nothing is stored on this site.</span></p>
+    <p style="color:#b9bcc3"><span lang="fr">Remplissez le formulaire : il ouvre WhatsApp avec votre message prêt à envoyer. Pneus : notre ligne pneus 5905 6000. Jantes : le magasin choisi. Rien n'est enregistré sur ce site.</span><span lang="en">Fill in the form: it opens WhatsApp with your message ready to send. Tyres go to our tyres line 5905 6000; rims go to the shop you choose. Nothing is stored on this site.</span></p>
     <ol class="steps" style="color:#d6d8dc"><li><span lang="fr">Taille du pneu ou modèle de jante</span><span lang="en">Tyre size or rim model</span></li><li><span lang="fr">Votre voiture et la quantité</span><span lang="en">Your car and quantity</span></li><li><span lang="fr">Le magasin vous répond avec un prix</span><span lang="en">The shop replies with a price</span></li></ol></div>
   <form class="q" id="qform">
     <div><label for="qn"><span lang="fr">Prénom</span><span lang="en">First name</span></label><input id="qn" autocomplete="given-name"></div>
@@ -248,11 +250,13 @@ footer a{color:#fff}
 
 <section class="blk" id="magasins"><div class="wrap">
   <div class="head"><h2><span lang="fr">Nos deux magasins</span><span lang="en">Our two shops</span></h2><p><span lang="fr">Appelez ou écrivez sur WhatsApp pour les horaires et la disponibilité.</span><span lang="en">Call or WhatsApp us for opening hours and availability.</span></p></div>
+  <div class="tyreline"><div><h3><span lang="fr">Pneus</span><span lang="en">Tyres</span></h3><p><span lang="fr">Une seule ligne WhatsApp pour les pneus, pour les deux magasins.</span><span lang="en">One WhatsApp line for tyres, for both shops.</span></p></div>
+    <a class="btn btn-wa" href="https://wa.me/23059056000?text=Bonjour%20CTC%2C%20je%20cherche%20des%20pneus%20%2F%20Hello%20CTC%2C%20I%20need%20tyres%3A%20"><span lang="fr">Pneus</span><span lang="en">Tyres</span> · WhatsApp 5905 6000</a></div>
   <div class="shops"><div class="shop"><h3>Cottage</h3><p>Forbach Road / Royal Road, Cottage</p><div class="row">
-    <a class="btn btn-wa" href="https://wa.me/23057757242">WhatsApp 5775 7242</a><a class="btn btn-wa" href="https://wa.me/23052547242">WhatsApp 5254 7242</a>
+    <a class="btn btn-wa" href="https://wa.me/23057757242"><span lang="fr">Jantes</span><span lang="en">Rims</span> · WhatsApp 5775 7242</a><a class="btn btn-wa" href="https://wa.me/23052547242"><span lang="fr">Jantes</span><span lang="en">Rims</span> · WhatsApp 5254 7242</a>
     <a class="btn btn-line" href="tel:+2302607600"><span lang="fr">Appeler</span><span lang="en">Call</span> 260 7600</a>
     <a class="btn btn-line" href="https://www.google.com/maps/search/?api=1&amp;query=Cottage%20Tyre%20Centre%20Cottage%20Mauritius"><span lang="fr">Itinéraire</span><span lang="en">Directions</span></a></div></div><div class="shop"><h3>Bagatelle</h3><p>Bagatelle Mall of Mauritius</p><div class="row">
-    <a class="btn btn-wa" href="https://wa.me/23052517242">WhatsApp 5251 7242</a>
+    <a class="btn btn-wa" href="https://wa.me/23052517242"><span lang="fr">Jantes</span><span lang="en">Rims</span> · WhatsApp 5251 7242</a>
     
     <a class="btn btn-line" href="https://www.google.com/maps/search/?api=1&amp;query=Bagatelle%20Mall%20of%20Mauritius"><span lang="fr">Itinéraire</span><span lang="en">Directions</span></a></div></div></div>
 </div></section>
@@ -295,17 +299,20 @@ footer a{color:#fff}
   ts.oninput=read;ts.onkeyup=read;read();
   $('tswa').onclick=function(){$('qsize').value=ts.value.toUpperCase();$('qneed').value='tyres'};
   // WhatsApp quote
-  var SH=[{"name":"Cottage","wa":"23057757242"},{"name":"Bagatelle","wa":"23052517242"}];
+  var SH=[{"name":"Cottage","wa":"23057757242"},{"name":"Bagatelle","wa":"23052517242"}], TW='23059056000';
   $('qform').onsubmit=function(e){
     e.preventDefault();
     var s=SH[+$('qshop').value],need=$('qneed');
-    var lines=[tr('Bonjour CTC '+s.name+',','Hello CTC '+s.name+',')];
+    // rims -> the chosen shop's rims line; tyres, tyres + rims and repairs -> the tyres line
+    var to=need.value==='rims'?s.wa:TW;
+    var lines=[tr('Bonjour CTC'+(need.value==='rims'?' '+s.name:'')+',','Hello CTC'+(need.value==='rims'?' '+s.name:'')+',')];
     lines.push(tr('Je cherche : ','I need: ')+need.options[need.selectedIndex].text+' x'+$('qqty').value);
+    if(need.value!=='rims')lines.push(tr('Magasin : ','Shop: ')+s.name);
     if($('qsize').value)lines.push(tr('Taille / modèle : ','Size / model: ')+$('qsize').value);
     if($('qcar').value)lines.push(tr('Voiture : ','Car: ')+$('qcar').value);
     if($('qmsg').value)lines.push($('qmsg').value);
     if($('qn').value)lines.push(tr('Merci, ','Thank you, ')+$('qn').value);
-    window.open('https://wa.me/'+s.wa+'?text='+encodeURIComponent(lines.join('\n')),'_blank');
+    window.open('https://wa.me/'+to+'?text='+encodeURIComponent(lines.join('\n')),'_blank');
   };
 })();
 </script>
