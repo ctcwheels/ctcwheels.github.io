@@ -236,7 +236,7 @@ footer a{color:#fff}
 
 <section class="blk dark" id="devis"><div class="wrap quote">
   <div><div class="head"><h2><span lang="fr">Devis par WhatsApp</span><span lang="en">Quote on WhatsApp</span></h2></div>
-    <p style="color:#b9bcc3"><span lang="fr">Remplissez le formulaire : il ouvre WhatsApp avec votre message prêt à envoyer. Pneus : notre ligne pneus 5905 6000. Jantes : le magasin choisi. Rien n'est enregistré sur ce site.</span><span lang="en">Fill in the form: it opens WhatsApp with your message ready to send. Tyres go to our tyres line 5905 6000; rims go to the shop you choose. Nothing is stored on this site.</span></p>
+    <p style="color:#b9bcc3"><span lang="fr">Remplissez le formulaire : il ouvre WhatsApp avec votre message prêt à envoyer. Pneus : notre ligne pneus 5905 6000. Jantes, ou pneus + jantes : le magasin et le numéro de votre choix. Rien n'est enregistré sur ce site.</span><span lang="en">Fill in the form: it opens WhatsApp with your message ready to send. Tyres go to our tyres line 5905 6000; rims, or tyres + rims, go to the shop and number you choose. Nothing is stored on this site.</span></p>
     <ol class="steps" style="color:#d6d8dc"><li><span lang="fr">Taille du pneu ou modèle de jante</span><span lang="en">Tyre size or rim model</span></li><li><span lang="fr">Votre voiture et la quantité</span><span lang="en">Your car and quantity</span></li><li><span lang="fr">Le magasin vous répond avec un prix</span><span lang="en">The shop replies with a price</span></li></ol></div>
   <form class="q" id="qform">
     <div><label for="qn"><span lang="fr">Prénom</span><span lang="en">First name</span></label><input id="qn" autocomplete="given-name"></div>
@@ -263,7 +263,7 @@ footer a{color:#fff}
     <a class="btn btn-wa" href="https://wa.me/23052517242"><span lang="fr">Jantes</span><span lang="en">Rims</span> · WhatsApp 5251 7242</a><a class="btn btn-wa" href="https://wa.me/23055327242"><span lang="fr">Jantes</span><span lang="en">Rims</span> · WhatsApp 5532 7242</a>
     
     <a class="btn btn-line" href="tel:+2304347600"><span lang="fr">Appeler</span><span lang="en">Call</span> 434 7600</a>
-    <a class="btn btn-line" href="https://www.google.com/maps/search/?api=1&amp;query=Bagatelle%20Mall%20of%20Mauritius"><span lang="fr">Itinéraire</span><span lang="en">Directions</span></a></div></div></div>
+    <a class="btn btn-line" href="https://share.google/6bs6H1LmREZozmDw8"><span lang="fr">Itinéraire</span><span lang="en">Directions</span></a></div></div></div>
 </div></section>
 
 <section class="blk" style="padding-top:0"><div class="wrap">
@@ -305,14 +305,15 @@ footer a{color:#fff}
   $('tswa').onclick=function(){$('qsize').value=ts.value.toUpperCase();$('qneed').value='tyres';if(window.fillNumHook)window.fillNumHook()};
   $('tsstock').onclick=function(){var m=ts.value.toUpperCase().match(/(\d{3})\s*\/\s*(\d{2})\s*Z?R?F?\s*(\d{2})/);this.href='tyres.html'+(m?'#'+m[1]+'/'+m[2]+' R'+m[3]:'')};
   // WhatsApp quote
-  var SH=[{"name":"Cottage","wa":[["23057757242","5775 7242"],["23052547242","5254 7242"]]},{"name":"Bagatelle","wa":[["23052517242","5251 7242"],["23055327242","5532 7242"]]}], TW='23059056000', TWS='5905 6000';
-  // number list: rims -> the chosen shop's rims numbers (client picks); tyres, tyres + rims, repairs -> tyres line only
+  var SH=[{"name":"Cottage","wa":[["23057757242","5775 7242"],["23052547242","5254 7242"]],"all":[["23057757242","5775 7242"],["23052547242","5254 7242"],["23059076000","5907 6000"]]},{"name":"Bagatelle","wa":[["23052517242","5251 7242"],["23055327242","5532 7242"]],"all":[["23052517242","5251 7242"],["23055327242","5532 7242"]]}], TW='23059056000', TWS='5905 6000';
+  // number list (KM 17 Nov 2026): rims -> shop's rims numbers; tyres + rims -> all of the shop's numbers (Cottage 3, Bagatelle 2);
+  // tyres and repairs -> tyres line only (fixed)
   function fillNum(){
-    var s=SH[+$('qshop').value],rims=$('qneed').value==='rims',sel=$('qnum'),h='';
-    if(rims){for(var k=0;k<s.wa.length;k++)h+='<option value="'+s.wa[k][0]+'">'+tr('Jantes ','Rims ')+s.name+' · '+s.wa[k][1]+'</option>'}
+    var s=SH[+$('qshop').value],need=$('qneed').value,sel=$('qnum'),h='',list=need==='rims'?s.wa:need==='both'?s.all:null;
+    if(list){for(var k=0;k<list.length;k++)h+='<option value="'+list[k][0]+'">'+s.name+' · '+list[k][1]+'</option>'}
     else h='<option value="'+TW+'">'+tr('Pneus · ','Tyres · ')+TWS+'</option>';
-    sel.innerHTML=h;sel.disabled=!rims;
-    $('qhint').textContent=rims?tr('Choisissez le numéro du magasin.','Choose the shop number.'):tr('Les pneus ont une seule ligne WhatsApp pour les deux magasins. Le magasin choisi est indiqué dans le message.','Tyres have one WhatsApp line for both shops. The shop you choose is shown in the message.');
+    sel.innerHTML=h;sel.disabled=!list;
+    $('qhint').textContent=list?tr('Choisissez le numéro du magasin.','Choose the shop number.'):tr('Les pneus ont une seule ligne WhatsApp pour les deux magasins. Le magasin choisi est indiqué dans le message.','Tyres have one WhatsApp line for both shops. The shop you choose is shown in the message.');
   }
   $('qshop').onchange=fillNum;$('qneed').onchange=fillNum;window.fillNumHook=fillNum;fillNum();
   var lbs=document.querySelectorAll('.lang button');for(var z=0;z<lbs.length;z++)lbs[z].addEventListener('click',fillNum);
@@ -320,10 +321,11 @@ footer a{color:#fff}
     e.preventDefault();
     var s=SH[+$('qshop').value],need=$('qneed');
     // rims -> the chosen shop's rims line; tyres, tyres + rims and repairs -> the tyres line
-    var to=need.value==='rims'?$('qnum').value:TW;
-    var lines=[tr('Bonjour CTC'+(need.value==='rims'?' '+s.name:'')+',','Hello CTC'+(need.value==='rims'?' '+s.name:'')+',')];
+    var shopLine=need.value==='rims'||need.value==='both';
+    var to=shopLine?$('qnum').value:TW;
+    var lines=[tr('Bonjour CTC'+(shopLine?' '+s.name:'')+',','Hello CTC'+(shopLine?' '+s.name:'')+',')];
     lines.push(tr('Je cherche : ','I need: ')+need.options[need.selectedIndex].text+' x'+$('qqty').value);
-    if(need.value!=='rims')lines.push(tr('Magasin : ','Shop: ')+s.name);
+    if(!shopLine)lines.push(tr('Magasin : ','Shop: ')+s.name);
     if($('qsize').value)lines.push(tr('Taille / modèle : ','Size / model: ')+$('qsize').value);
     if($('qcar').value)lines.push(tr('Voiture : ','Car: ')+$('qcar').value);
     if($('qmsg').value)lines.push($('qmsg').value);
