@@ -103,6 +103,8 @@ section.blk{padding:64px 0}
 @media(max-width:860px){.quote{grid-template-columns:1fr}}
 form.q{color:var(--dark);background:#fff;border-radius:16px;padding:22px;border:1px solid #e3e1dc;display:grid;grid-template-columns:1fr 1fr;gap:12px}
 form.q .full{grid-column:1/-1}
+form.q select:disabled{background:#f1efea;color:#333;opacity:1}
+.qhint{font-size:12.5px;color:#666;margin-top:4px}
 form.q label{font-size:13px;font-weight:700;display:block;margin-bottom:4px}
 form.q input,form.q select,form.q textarea{width:100%;font:inherit;padding:10px 12px;border:1px solid #c9c6bf;border-radius:10px;background:#fff}
 form.q button{grid-column:1/-1;justify-content:center}
@@ -241,6 +243,7 @@ footer a{color:#fff}
     <div><label for="qshop"><span lang="fr">Magasin</span><span lang="en">Shop</span></label><select id="qshop"><option value="0">Cottage</option><option value="1">Bagatelle</option></select></div>
     <div><label for="qneed"><span lang="fr">Je cherche</span><span lang="en">I need</span></label><select id="qneed"><option value="tyres" data-fr="Pneus" data-en="Tyres">Pneus</option><option value="rims" data-fr="Jantes" data-en="Rims">Jantes</option><option value="both" data-fr="Pneus + jantes" data-en="Tyres + rims">Pneus + jantes</option><option value="repair" data-fr="Réparation / crevaison" data-en="Repair / puncture">Réparation / crevaison</option></select></div>
     <div><label for="qqty"><span lang="fr">Quantité</span><span lang="en">Quantity</span></label><select id="qqty"><option>4</option><option>2</option><option>1</option><option>5</option></select></div>
+    <div class="full"><label for="qnum"><span lang="fr">Envoyer au WhatsApp</span><span lang="en">Send to WhatsApp</span></label><select id="qnum"><option value="23059056000">5905 6000</option></select><div class="qhint" id="qhint"></div></div>
     <div class="full"><label for="qsize"><span lang="fr">Taille du pneu ou modèle de jante</span><span lang="en">Tyre size or rim model</span></label><input id="qsize" placeholder="205/55 R16 · 17&quot; 5×114.3"></div>
     <div class="full"><label for="qcar"><span lang="fr">Voiture (marque, modèle, année)</span><span lang="en">Car (make, model, year)</span></label><input id="qcar" placeholder="Toyota Axio 2016"></div>
     <div class="full"><label for="qmsg"><span lang="fr">Message (facultatif)</span><span lang="en">Message (optional)</span></label><textarea id="qmsg" rows="2"></textarea></div>
@@ -299,15 +302,25 @@ footer a{color:#fff}
     $('ps').textContent=m[5]||'–';$('psv').textContent=m[5]&&SP[m[5]]?SP[m[5]]+' km/h max':(m[5]==='Z'?'> 240 km/h':'–');
   }
   ts.oninput=read;ts.onkeyup=read;read();
-  $('tswa').onclick=function(){$('qsize').value=ts.value.toUpperCase();$('qneed').value='tyres'};
+  $('tswa').onclick=function(){$('qsize').value=ts.value.toUpperCase();$('qneed').value='tyres';if(window.fillNumHook)window.fillNumHook()};
   $('tsstock').onclick=function(){var m=ts.value.toUpperCase().match(/(\d{3})\s*\/\s*(\d{2})\s*Z?R?F?\s*(\d{2})/);this.href='tyres.html'+(m?'#'+m[1]+'/'+m[2]+' R'+m[3]:'')};
   // WhatsApp quote
-  var SH=[{"name":"Cottage","wa":"23057757242"},{"name":"Bagatelle","wa":"23052517242"}], TW='23059056000';
+  var SH=[{"name":"Cottage","wa":[["23057757242","5775 7242"],["23052547242","5254 7242"]]},{"name":"Bagatelle","wa":[["23052517242","5251 7242"],["23055327242","5532 7242"]]}], TW='23059056000', TWS='5905 6000';
+  // number list: rims -> the chosen shop's rims numbers (client picks); tyres, tyres + rims, repairs -> tyres line only
+  function fillNum(){
+    var s=SH[+$('qshop').value],rims=$('qneed').value==='rims',sel=$('qnum'),h='';
+    if(rims){for(var k=0;k<s.wa.length;k++)h+='<option value="'+s.wa[k][0]+'">'+tr('Jantes ','Rims ')+s.name+' · '+s.wa[k][1]+'</option>'}
+    else h='<option value="'+TW+'">'+tr('Pneus · ','Tyres · ')+TWS+'</option>';
+    sel.innerHTML=h;sel.disabled=!rims;
+    $('qhint').textContent=rims?tr('Choisissez le numéro du magasin.','Choose the shop number.'):tr('Les pneus ont une seule ligne WhatsApp pour les deux magasins. Le magasin choisi est indiqué dans le message.','Tyres have one WhatsApp line for both shops. The shop you choose is shown in the message.');
+  }
+  $('qshop').onchange=fillNum;$('qneed').onchange=fillNum;window.fillNumHook=fillNum;fillNum();
+  var lbs=document.querySelectorAll('.lang button');for(var z=0;z<lbs.length;z++)lbs[z].addEventListener('click',fillNum);
   $('qform').onsubmit=function(e){
     e.preventDefault();
     var s=SH[+$('qshop').value],need=$('qneed');
     // rims -> the chosen shop's rims line; tyres, tyres + rims and repairs -> the tyres line
-    var to=need.value==='rims'?s.wa:TW;
+    var to=need.value==='rims'?$('qnum').value:TW;
     var lines=[tr('Bonjour CTC'+(need.value==='rims'?' '+s.name:'')+',','Hello CTC'+(need.value==='rims'?' '+s.name:'')+',')];
     lines.push(tr('Je cherche : ','I need: ')+need.options[need.selectedIndex].text+' x'+$('qqty').value);
     if(need.value!=='rims')lines.push(tr('Magasin : ','Shop: ')+s.name);
