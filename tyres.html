@@ -22,6 +22,17 @@ h1,h2,.osw{font-family:Oswald,Impact,"Arial Narrow",sans-serif;text-transform:up
 .hero{background:var(--ink);color:#f3f3f3;padding:34px 0 26px}
 .hero h1{font-size:clamp(34px,6vw,54px)}
 .hero p{color:#c9ccd2;margin-top:10px;max-width:640px}
+.hero{background:radial-gradient(900px 380px at 90% 0%,#3a0f17 0%,transparent 65%),var(--ink)}
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px;max-width:560px}
+.kpi div{background:rgba(255,255,255,.06);border:1px solid #2b2e34;border-radius:12px;padding:10px;text-align:center}
+.kpi b{display:block;font-family:Oswald,sans-serif;font-size:26px;line-height:1.1;color:#fff}.kpi span{font-size:12px;color:#b9bcc3}
+.bchips{display:flex;gap:6px;overflow-x:auto;padding:16px 0 2px;scrollbar-width:none;align-items:center}
+.bchips .bl{flex:none;color:#ffb4bf;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-right:4px}
+.bchips button{flex:none;border:1px solid #444;background:transparent;color:#fff;border-radius:999px;padding:5px 13px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s}
+.bchips button:hover,.bchips button.on{background:var(--red);border-color:var(--red)}
+.bar{display:none}
+@media(max-width:700px){body{padding-bottom:62px}.bar{display:grid;grid-template-columns:1.3fr 1fr;position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:1px solid #ddd;box-shadow:0 -6px 20px rgba(0,0,0,.12)}.bar a{display:flex;align-items:center;justify-content:center;text-decoration:none;font-weight:700;font-size:14px;padding:16px 6px;color:#111}.bar .b1{background:var(--wa);color:#05391b}.bar .b2{background:var(--red);color:#fff}}
+details.sz{transition:box-shadow .2s}details.sz:hover{box-shadow:0 8px 22px rgba(0,0,0,.08)}details.sz[open]{border-color:#c8102e}
 .tools{position:sticky;top:60px;z-index:10;background:var(--paper);border-bottom:1px solid #e1ded7;padding:12px 0}
 .tools .wrap{display:grid;grid-template-columns:1.3fr .8fr .5fr 1fr;gap:8px}
 @media(max-width:640px){.tools .wrap{grid-template-columns:1fr 1fr}.tools .wrap .q,.tools .wrap .br{grid-column:1/-1}}
@@ -58,6 +69,8 @@ footer a{color:#fff}
 <section class="hero"><div class="wrap">
   <h1><span lang="fr">Pneus en stock</span><span lang="en">Tyres in stock</span></h1>
   <p><span lang="fr">11 768 pneus (1418 modèles) en 335 tailles, du 12" au 24". Cherchez votre taille, choisissez votre magasin, puis touchez « Prix » : votre demande part sur WhatsApp (5905 6000) et on vous répond avec le prix.</span><span lang="en">11,768 tyres (1418 models) in 335 sizes, 12" to 24". Find your size, choose your shop, then tap "Price": your request goes to WhatsApp (5905 6000) and we reply with the price.</span></p>
+  <div class="kpi"><div><b>11,768</b><span><span lang="fr">pneus</span><span lang="en">tyres</span></span></div><div><b>335</b><span><span lang="fr">tailles</span><span lang="en">sizes</span></span></div><div><b>93</b><span><span lang="fr">marques</span><span lang="en">brands</span></span></div><div><b>2</b><span><span lang="fr">magasins</span><span lang="en">shops</span></span></div></div>
+  <div class="bchips" id="bchips"><span class="bl"><span lang="fr">Marques populaires</span><span lang="en">Popular brands</span></span><button type="button" data-b="MASSIMO">MASSIMO</button><button type="button" data-b="SUMAXX">SUMAXX</button><button type="button" data-b="MICHELIN">MICHELIN</button><button type="button" data-b="KUMHO">KUMHO</button><button type="button" data-b="BRIDGESTONE">BRIDGESTONE</button><button type="button" data-b="OGREEN">OGREEN</button><button type="button" data-b="HIFLY">HIFLY</button><button type="button" data-b="WESTLAKE">WESTLAKE</button><button type="button" data-b="MINNELL">MINNELL</button><button type="button" data-b="GOODRIDE">GOODRIDE</button></div>
 </div></section>
 <div class="tools"><div class="wrap">
   <input class="q" id="q" placeholder="205/55 R16" autocomplete="off" spellcheck="false" aria-label="Taille">
@@ -405,6 +418,7 @@ footer a{color:#fff}
   <p class="none" id="none"><span lang="fr">Taille non trouvée en stock. Envoyez-la sur WhatsApp 5905 6000 : on peut la commander.</span><span lang="en">Size not found in stock. Send it on WhatsApp 5905 6000: we can order it.</span></p>
 </div></main>
 <footer><div class="wrap">Cottage Tyre Centre Ltd · Cottage &amp; Bagatelle · <a href="./">ctcwheels.github.io</a> · <span lang="fr">Pneus</span><span lang="en">Tyres</span> WhatsApp <a href="https://wa.me/23059056000">5905 6000</a></div></footer>
+<nav class="bar"><a class="b1" href="https://wa.me/23059056000?text=Bonjour%20CTC%2C%20je%20cherche%20des%20pneus%20%2F%20Hello%20CTC%2C%20I%20need%20tyres%3A%20">WhatsApp 5905 6000</a><a class="b2" href="./"><span lang="fr">Accueil</span><span lang="en">Home</span></a></nav>
 <script>
 (function(){
   var root=document.documentElement;root.className+=' js';
@@ -423,7 +437,10 @@ footer a{color:#fff}
       g.open=!!(n&&(qd.length>=5||(b&&shown<=6)))}
     document.getElementById('none').style.display=shown?'none':'block';
   }
-  q.oninput=q.onkeyup=draw;br.onchange=draw;
+  q.oninput=q.onkeyup=draw;br.onchange=function(){syncB();draw()};
+  var bch=document.getElementById('bchips');
+  function syncB(){var bs=bch.querySelectorAll('button');for(var k=0;k<bs.length;k++)bs[k].className=bs[k].getAttribute('data-b')===br.value?'on':''}
+  bch.onclick=function(e){var t=e.target;if(t.tagName!=='BUTTON')return;br.value=br.value===t.getAttribute('data-b')?'':t.getAttribute('data-b');syncB();draw();document.querySelector('.tools').scrollIntoView({behavior:'smooth'})};
   chips.onclick=function(e){var t=e.target;if(t.tagName!=='BUTTON')return;dia=t.getAttribute('data-d');for(var k=0;k<chips.children.length;k++)chips.children[k].className=chips.children[k]===t?'on':'';draw()};
   document.addEventListener('click',function(e){var t=e.target;if(!t.classList||!(t.classList.contains('ask')||t.classList.contains('askall')))return;
     var n=qty.value,item=t.getAttribute('data-t'),shop=document.getElementById('shop').value;
