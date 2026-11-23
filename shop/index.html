@@ -1978,6 +1978,7 @@ details#more{margin-top:20px;background:#fff;border:1px solid var(--line);border
   $$('.lg button').forEach(function (b) { var o = b.onclick; b.onclick = function () { o(); paint(); }; });
 
   /* start: hash like #17 opens a size */
+  var tabMap = { car: 'ft-car', rims: 'ft-rims', tyres: 'ft-tyres', combo: 'ft-combo' }; var hh = (location.hash || '').replace('#', ''); if (tabMap[hh]) { var tb = $('.ftab[data-p="' + tabMap[hh] + '"]'); if (tb) tb.click(); }
   var h = (location.hash || '').replace('#', ''); if (/^\d{2}$/.test(h)) { st.d = h; }
   fillPcd(); draw(); paint();
   if (st.d && fsz) fsz.value = st.d;
